@@ -1,0 +1,36 @@
+{
+  "name": "spotify-dance-api",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "author": "Oleksii Kulikov <yeexel@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": "10.13.x"
+  },
+  "scripts": {
+    "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/server.ts",
+    "build-ts": "tsc",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "serve": "node dist/server.js",
+    "build": "yarn run tslint && yarn run build-ts"
+  },
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "query-string": "^6.2.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.0",
+    "@types/koa": "^2.0.48",
+    "@types/koa-bodyparser": "^4.2.1",
+    "@types/koa-router": "^7.0.39",
+    "@types/query-string": "^6.2.0",
+    "nodemon": "^1.18.9",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
+  }
+}
