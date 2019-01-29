@@ -3,7 +3,7 @@ import { config } from "../config";
 const request = require("request-promise");
 import * as querystring from "query-string";
 import * as jsonwebtoken from "jsonwebtoken";
-import { SPOTIFY_API_BASE_URL } from "../constants";
+import { SPOTIFY_ACCOUNTS_BASE_URL } from "../constants";
 
 const RANDOM_STRING_LENGTH = 10;
 const SPOTIFY_STATE_KEY = "spotskc";
@@ -11,17 +11,15 @@ const SPOTIFY_PERMISSIONS_SCOPE =
   "user-read-private user-read-email playlist-read-private playlist-read-collaborative";
 
 export default class AuthController {
-  public static async spotifyLogin(ctx: BaseContext) {
+  public static async login(ctx: BaseContext) {
     const state = generateRandomString();
 
     ctx.cookies.set(SPOTIFY_STATE_KEY, state);
 
-    ctx.body = {
-      uri: prepareSpotifyAuthorizeUrl(state)
-    };
+    ctx.redirect(prepareSpotifyAuthorizeUrl(state));
   }
 
-  public static async spotifyCallback(ctx: BaseContext) {
+  public static async callback(ctx: BaseContext) {
     const code = ctx.query.code || null;
     const state = ctx.query.state || null;
     const storedState = ctx.cookies.get(SPOTIFY_STATE_KEY);
@@ -42,12 +40,11 @@ export default class AuthController {
 
       const token = jsonwebtoken.sign(
         { data: spotifyAcessTokenData },
-        config.jwtSecret
+        config.jwtSecret,
+        { expiresIn: "1h" }
       );
 
-      ctx.body = {
-        token
-      };
+      ctx.redirect(`${config.clientUrl}?auth_token=${token}`);
     }
   }
 }
@@ -57,19 +54,19 @@ const prepareSpotifyAuthorizeUrl = (state: string) => {
     response_type: "code",
     client_id: config.spotifyClientId,
     scope: SPOTIFY_PERMISSIONS_SCOPE,
-    redirect_uri: "http://localhost:3000/callback/",
+    redirect_uri: `${config.apiUrl}/callback`,
     state
   });
 
-  return `${SPOTIFY_API_BASE_URL}/authorize?${qs}`;
+  return `${SPOTIFY_ACCOUNTS_BASE_URL}/authorize?${qs}`;
 };
 
 const prepareAuthCodeRequestParams = (code: string): object => ({
   method: "POST",
-  uri: `${SPOTIFY_API_BASE_URL}/api/token`,
+  uri: `${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`,
   form: {
     code,
-    redirect_uri: "http://localhost:3000/callback/",
+    redirect_uri: `${config.apiUrl}/callback`,
     grant_type: "authorization_code"
   },
   headers: {

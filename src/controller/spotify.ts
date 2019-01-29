@@ -1,9 +1,22 @@
 import { BaseContext } from "koa";
+const request = require("request-promise");
+import { SPOTIFY_API_BASE_URL } from "../constants";
 
 export default class SpotifyController {
-  public static async testToken(ctx: BaseContext) {
-    console.log("state");
-    console.log(ctx.state);
-    ctx.body = "HELLO TEST";
+  public static async account(ctx: BaseContext) {
+    const accountData = await request(
+      requestSpotifyApi("me", ctx.state.user.access_token)
+    );
+
+    ctx.body = accountData;
   }
 }
+
+const requestSpotifyApi = (endpoint: string, token: string): object => ({
+  method: "GET",
+  uri: `${SPOTIFY_API_BASE_URL}/${endpoint}`,
+  headers: {
+    Authorization: `Bearer ${token}`
+  },
+  json: true
+});

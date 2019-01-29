@@ -1,10 +1,13 @@
 import * as Koa from "koa";
+import * as cors from "@koa/cors";
 import * as bodyParser from "koa-bodyparser";
 
 import { config } from "./config";
 import { router } from "./routes";
 
 const app = new Koa();
+
+app.use(cors());
 
 app.use(async (ctx, next) => {
   const start = Date.now();

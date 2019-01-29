@@ -14,9 +14,9 @@ router.get("/", ctx => {
   };
 });
 
-router.get("/login", controller.auth.spotifyLogin);
-router.get("/callback", controller.auth.spotifyCallback);
+router.get("/login", controller.auth.login);
+router.get("/callback", controller.auth.callback);
 
-router.get("/test", jwtMiddleware, controller.spotify.testToken);
+router.get("/api/account", jwtMiddleware, controller.spotify.account);
 
 export { router };
