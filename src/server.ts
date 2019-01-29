@@ -1,5 +1,6 @@
 import * as Koa from "koa";
 import * as cors from "@koa/cors";
+import * as helmet from "koa-helmet";
 import * as bodyParser from "koa-bodyparser";
 
 import { config } from "./config";
@@ -7,6 +8,7 @@ import { router } from "./routes";
 
 const app = new Koa();
 
+app.use(helmet());
 app.use(cors());
 
 app.use(async (ctx, next) => {
@@ -17,7 +19,6 @@ app.use(async (ctx, next) => {
 });
 
 app.use(bodyParser());
-
 app.use(router.routes()).use(router.allowedMethods());
 
 app.use(async ctx => {
