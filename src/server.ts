@@ -34,8 +34,8 @@ app.listen(config.port);
 // Heroku-specific
 if (process.env.NODE_ENV === "production") {
   const http = require("http");
-  setInterval(async () => {
-    await http.get(config.apiUrl);
+  setInterval(() => {
     console.log(`KEEP_AWAKE_REQUEST: ${Date.now()}`);
+    http.get(config.apiUrl);
   }, KEEP_AWAKE_15MIN_INTERVAL);
 }
