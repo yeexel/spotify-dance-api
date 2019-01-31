@@ -6,6 +6,8 @@ import * as bodyParser from "koa-bodyparser";
 import { config } from "./config";
 import { router } from "./routes";
 
+const KEEP_AWAKE_15MIN_INTERVAL = 900000;
+
 const app = new Koa();
 
 app.use(helmet());
@@ -28,3 +30,12 @@ app.use(async ctx => {
 });
 
 app.listen(config.port);
+
+// Heroku-specific
+if (process.env.NODE_ENV === "production") {
+  const http = require("http");
+  setInterval(async () => {
+    await http.get(config.apiUrl);
+    console.log(`KEEP_AWAKE_REQUEST: ${Date.now()}`);
+  }, KEEP_AWAKE_15MIN_INTERVAL);
+}
