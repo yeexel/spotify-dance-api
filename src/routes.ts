@@ -2,6 +2,7 @@ import { config } from "./config";
 import jwt from "./middleware/jwt";
 import * as Router from "koa-router";
 import controller = require("./controller");
+const { version } = require("../package.json");
 
 const router = new Router();
 const jwtMiddleware = jwt({ secret: config.jwtSecret });
@@ -9,7 +10,7 @@ const jwtMiddleware = jwt({ secret: config.jwtSecret });
 router.get("/", ctx => {
   ctx.body = {
     api: "spotify-dance-api",
-    version: process.env.npm_package_version,
+    version,
     ts: Date.now()
   };
 });
