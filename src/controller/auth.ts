@@ -20,15 +20,15 @@ export default class AuthController {
   }
 
   public static async callback(ctx: BaseContext) {
-    const code = ctx.query.code || null;
-    const state = ctx.query.state || null;
+    const code = ctx.query.code || undefined;
+    const state = ctx.query.state || undefined;
     const storedState = ctx.cookies.get(SPOTIFY_STATE_KEY);
 
     if (state === null || state !== storedState) {
       ctx.throw(400, "State error");
     } else {
       // clear cookie
-      ctx.cookies.set(SPOTIFY_STATE_KEY, null);
+      ctx.cookies.set(SPOTIFY_STATE_KEY, undefined);
 
       const spotifyAcessTokenData = await request(
         prepareAuthCodeRequestParams(code)
