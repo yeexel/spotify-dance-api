@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/server.ts",
     "build-ts": "tsc",
-    "tslint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
     "serve": "node dist/server.js",
     "build": "yarn run tslint && yarn run build-ts"
   },
@@ -46,5 +46,5 @@
     "tslint": "^5.12.1",
     "typescript": "^3.2.4"
   },
-  "heroku-run-build-script": true
+  "heroku-run-build-script": false
 }
