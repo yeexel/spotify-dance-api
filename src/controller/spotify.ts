@@ -18,7 +18,7 @@ class SpotifyController {
 
     // const users = await userRepository.find();
 
-    console.log(users);
+    // console.log(users);
 
     // accountData.users = users;
 
