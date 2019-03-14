@@ -44,6 +44,14 @@ if (process.env.NODE_ENV === "production") {
   }, KEEP_AWAKE_15MIN_INTERVAL);
 }
 
+try {
+  createConnection().then(() => {
+    console.log("connection established....");
+  })
+} catch(e) {
+  console.log("NO LUCHJ with");
+};
+
 // createConnection().then(() => {
   app.listen(config.port);
 // });
