@@ -44,6 +44,6 @@ if (process.env.NODE_ENV === "production") {
   }, KEEP_AWAKE_15MIN_INTERVAL);
 }
 
-createConnection().then(() => {
+// createConnection().then(() => {
   app.listen(config.port);
-});
+// });

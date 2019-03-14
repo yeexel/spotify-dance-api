@@ -1,6 +1,6 @@
 {
   "name": "spotify-dance-api",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "main": "dist/server.js",
   "author": "Oleksii Kulikov <yeexel@gmail.com>",
   "license": "MIT",
@@ -46,5 +46,5 @@
     "tslint": "^5.12.1",
     "typescript": "^3.2.4"
   },
-  "heroku-run-build-script": false
+  "heroku-run-build-script": true
 }
