@@ -11,6 +11,7 @@ class SpotifyController {
     );
 
     console.log("db");
+    console.log(process.env);
     console.log(getManager());
     const userRepository = getManager().getRepository(User);
 
