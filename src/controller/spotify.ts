@@ -13,14 +13,14 @@ class SpotifyController {
     console.log("db");
     console.log("logs");
     console.log(process.env);
-    console.log(getManager());
-    const userRepository = getManager().getRepository(User);
+    // console.log(getManager());
+    // const userRepository = getManager().getRepository(User);
 
-    const users = await userRepository.find();
+    // const users = await userRepository.find();
 
     console.log(users);
 
-    accountData.users = users;
+    // accountData.users = users;
 
     ctx.body = accountData;
   }
