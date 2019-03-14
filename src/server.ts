@@ -32,14 +32,9 @@ app.use(async ctx => {
   }
 });
 
-try {
-  createConnection().then(() => {
-    console.log("connection established....");
-    app.listen(config.port);
-  });
-} catch (e) {
-  console.log("NO LUCHJ with");
-}
+createConnection();
+
+app.listen(config.port);
 
 // Heroku-specific
 // if (process.env.NODE_ENV === "production") {
