@@ -1,6 +1,6 @@
 {
   "name": "spotify-dance-api",
-  "version": "0.2.15",
+  "version": "0.4.0",
   "main": "dist/server.js",
   "author": "Oleksii Kulikov <yeexel@gmail.com>",
   "license": "MIT",
@@ -13,6 +13,7 @@
     "build-ts": "tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json --fix",
     "serve": "node dist/server.js",
+    "start": "node build/server.js",
     "build": "yarn run tslint && yarn run build-ts"
   },
   "dependencies": {
