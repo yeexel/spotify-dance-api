@@ -47,10 +47,10 @@ if (process.env.NODE_ENV === "production") {
 try {
   createConnection().then(() => {
     console.log("connection established....");
-  })
-} catch(e) {
+  });
+} catch (e) {
   console.log("NO LUCHJ with");
-};
+}
 
 // createConnection().then(() => {
   app.listen(config.port);
