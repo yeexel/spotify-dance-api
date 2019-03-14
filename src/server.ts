@@ -32,18 +32,6 @@ app.use(async ctx => {
   }
 });
 
-// Heroku-specific
-if (process.env.NODE_ENV === "production") {
-  // TODO: enforce HTTPS
-  // https://github.com/rangle/force-ssl-heroku/blob/master/force-ssl-heroku.js
-
-  const https = require("https");
-  setInterval(() => {
-    console.log(`KEEP_AWAKE_REQUEST: ${Date.now()}`);
-    https.get(config.apiUrl);
-  }, KEEP_AWAKE_15MIN_INTERVAL);
-}
-
 try {
   createConnection().then(() => {
     console.log("connection established....");
@@ -52,6 +40,18 @@ try {
 } catch (e) {
   console.log("NO LUCHJ with");
 }
+
+// Heroku-specific
+// if (process.env.NODE_ENV === "production") {
+//   // TODO: enforce HTTPS
+//   // https://github.com/rangle/force-ssl-heroku/blob/master/force-ssl-heroku.js
+
+//   const https = require("https");
+//   setInterval(() => {
+//     console.log(`KEEP_AWAKE_REQUEST: ${Date.now()}`);
+//     https.get(config.apiUrl);
+//   }, KEEP_AWAKE_15MIN_INTERVAL);
+// }
 
 // createConnection().then(() => {
   // app.listen(config.port);
