@@ -32,9 +32,13 @@ app.use(async ctx => {
   }
 });
 
-createConnection().then(() => {
-  app.listen(config.port);
-});
+try {
+  createConnection();
+} catch (e) {
+  throw e;
+}
+
+app.listen(config.port);
 
 // Heroku-specific
 // if (process.env.NODE_ENV === "production") {
