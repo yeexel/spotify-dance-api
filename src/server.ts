@@ -3,8 +3,11 @@ import * as cors from "@koa/cors";
 import * as helmet from "koa-helmet";
 import * as bodyParser from "koa-bodyparser";
 
-import { config } from "./config";
 import { router } from "./routes";
+import { config } from "./config";
+
+import "reflect-metadata";
+import { createConnection } from "typeorm";
 
 const KEEP_AWAKE_15MIN_INTERVAL = 900000;
 
@@ -29,13 +32,18 @@ app.use(async ctx => {
   }
 });
 
-app.listen(config.port);
-
 // Heroku-specific
 if (process.env.NODE_ENV === "production") {
+  // TODO: enforce HTTPS
+  // https://github.com/rangle/force-ssl-heroku/blob/master/force-ssl-heroku.js
+
   const https = require("https");
   setInterval(() => {
     console.log(`KEEP_AWAKE_REQUEST: ${Date.now()}`);
     https.get(config.apiUrl);
   }, KEEP_AWAKE_15MIN_INTERVAL);
 }
+
+createConnection().then(() => {
+  app.listen(config.port);
+});

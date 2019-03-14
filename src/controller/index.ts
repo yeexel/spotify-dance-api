@@ -1,2 +1,2 @@
 export { default as auth } from "./auth";
-export { default as spotify } from "./spotify";
+export { SpotifyController as spotify } from "./spotify";

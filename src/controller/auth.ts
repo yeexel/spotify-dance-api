@@ -41,7 +41,7 @@ export default class AuthController {
       const token = jsonwebtoken.sign(
         { data: spotifyAcessTokenData },
         config.jwtSecret,
-        { expiresIn: "1h" }
+        { expiresIn: "50m" }
       );
 
       ctx.redirect(`${config.clientUrl}?auth_token=${token}`);

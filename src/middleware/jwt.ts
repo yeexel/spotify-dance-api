@@ -17,6 +17,15 @@ export default (opts: { secret?: string } = {}) => {
         process.env.JWT_SECRET
       );
 
+      if (decoded.exp < Date.now() / 1000) {
+        ctx.throw({
+          name: "TokenExpiredError"
+        });
+      }
+
+      console.log("DECODED TOKEN");
+      console.log(decoded);
+
       // If it worked set the ctx.state.user parameter to the decoded token.
       ctx.state.user = decoded.data;
     } catch (error) {
