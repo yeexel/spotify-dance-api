@@ -12,7 +12,7 @@ class SpotifyController {
 
     const userRepository = getManager().getRepository(User);
 
-    const users = userRepository.find();
+    const users = await userRepository.find();
 
     accountData.users = users;
 
