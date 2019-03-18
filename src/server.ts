@@ -34,14 +34,14 @@ app.use(async ctx => {
   }
 });
 
-getConnectionOptions().then(async options => {
+getConnectionOptions().then(options => {
   let dbOptions = options;
 
   if (process.env.NODE_ENV === "production") {
     dbOptions = Object.assign(options, { extra: { ssl: "Amazon RDS" } });
   }
 
-  await createConnection(dbOptions);
+  createConnection(dbOptions);
 
   app.listen(config.port);
 });
