@@ -10,10 +10,6 @@ class SpotifyController {
       requestSpotifyApi("me", ctx.state.user.access_token)
     );
 
-    const conn = await createConnection();
-
-    console.log("connected to db...");
-
     ctx.body = accountData;
   }
 }
