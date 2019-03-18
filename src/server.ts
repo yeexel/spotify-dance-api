@@ -34,14 +34,14 @@ app.use(async ctx => {
   }
 });
 
-getConnectionOptions().then(options => {
+getConnectionOptions().then(async options => {
   let dbOptions = options;
 
   if (process.env.NODE_ENV === "production") {
     dbOptions = Object.assign(options, { extra: { ssl: true } });
   }
 
-  createConnection(dbOptions);
+  await createConnection(dbOptions);
 
   app.listen(config.port);
 });
