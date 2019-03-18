@@ -35,9 +35,15 @@ app.use(async ctx => {
 console.log("TYPE_ORM conn");
 console.log(createConnection);
 
-createConnection().then(() => {
-  app.listen(config.port);
-});
+try {
+  createConnection().then(() => {
+    app.listen(config.port);
+  });
+} catch (e) {
+  console.log("db conn error lal");
+  console.log(e);
+  throw e;
+}
 
 // Heroku-specific
 // if (process.env.NODE_ENV === "production") {
