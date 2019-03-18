@@ -35,8 +35,6 @@ app.use(async ctx => {
 });
 
 getConnectionOptions().then(async options => {
-  console.log(options);
-
   let dbOptions = {};
 
   console.log(process.env.NODE_ENV);
@@ -44,6 +42,8 @@ getConnectionOptions().then(async options => {
   if (process.env.NODE_ENV === "production") {
     dbOptions = Object.assign(options, { extra: { ssl: "Amazon RDS" } });
   }
+
+  console.log(dbOptions);
 
   await createConnection();
 

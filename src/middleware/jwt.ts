@@ -23,9 +23,6 @@ export default (opts: { secret?: string } = {}) => {
         });
       }
 
-      console.log("DECODED TOKEN");
-      console.log(decoded);
-
       // If it worked set the ctx.state.user parameter to the decoded token.
       ctx.state.user = decoded.data;
     } catch (error) {
