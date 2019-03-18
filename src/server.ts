@@ -45,7 +45,7 @@ getConnectionOptions().then(async options => {
     dbOptions = Object.assign(options, { extra: { ssl: "Amazon RDS" } });
   }
 
-  const conn = createConnection();
+  await createConnection();
 
   app.listen(config.port);
 });
