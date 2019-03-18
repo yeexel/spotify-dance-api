@@ -1,0 +1,25 @@
+branch-defaults:
+  master:
+    environment: spotify-dance-api-dev
+    group_suffix: null
+deploy:
+  artifact: dist/deploy.zip
+global:
+  application_name: spotify-dance-api
+  branch: null
+  default_ec2_keyname: null
+  default_platform: Node.js
+  default_region: us-east-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  repository: null
+  sc: git
+  workspace_type: Application
+commands:
+  01_set_path:
+    command: echo 'export PATH=$PATH:`ls -td /opt/elasticbeanstalk/node-install/node-* | head -1`/bin' >> /root/.bash_profile
+  02_set_path:
+    command: export PATH=$PATH:`ls -td /opt/elasticbeanstalk/node-install/node-* | head -1`/bin
