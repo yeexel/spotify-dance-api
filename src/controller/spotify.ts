@@ -10,11 +10,9 @@ class SpotifyController {
       requestSpotifyApi("me", ctx.state.user.access_token)
     );
 
-    console.log(getManager());
+    const repo = getManager().getRepository(User);
 
-    // const repo = getManager().getRepository(User);
-
-    // console.log(repo);
+    console.log(repo);
 
     ctx.body = accountData;
   }
