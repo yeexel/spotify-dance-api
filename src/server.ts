@@ -39,8 +39,6 @@ getConnectionOptions().then(options => {
 
   let dbOptions = {};
 
-  console.log(process.env);
-
   if (process.env.NODE_ENV === "production") {
     dbOptions = Object.assign(options, { extra: { ssl: "Amazon RDS" } });
   }
