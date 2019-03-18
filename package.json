@@ -1,6 +1,6 @@
 {
   "name": "spotify-dance-api",
-  "version": "0.6.13",
+  "version": "0.6.14",
   "main": "dist/server.js",
   "author": "Oleksii Kulikov <yeexel@gmail.com>",
   "license": "MIT",
@@ -14,7 +14,6 @@
     "build-ts": "tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json --fix",
     "serve": "node dist/server.js",
-    "prestart": "npx typeorm migration:run",
     "start": "node build/server.js",
     "build": "yarn run tslint && yarn run build-ts"
   },
