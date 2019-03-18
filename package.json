@@ -1,6 +1,6 @@
 {
   "name": "spotify-dance-api",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "main": "dist/server.js",
   "author": "Oleksii Kulikov <yeexel@gmail.com>",
   "license": "MIT",
