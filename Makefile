@@ -11,4 +11,4 @@ deploy:
 	rm -rf ./build
 	yarn build
 	sh ./scripts/dist.sh
-	eb deploy dev
+	eb deploy
