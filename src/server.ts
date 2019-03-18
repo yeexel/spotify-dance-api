@@ -35,9 +35,9 @@ app.use(async ctx => {
 console.log("TYPE_ORM conn");
 console.log(createConnection);
 
-// createConnection().then(() => {
+createConnection().then(() => {
   app.listen(config.port);
-// });
+});
 
 // Heroku-specific
 // if (process.env.NODE_ENV === "production") {
