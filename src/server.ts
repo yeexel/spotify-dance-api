@@ -37,7 +37,7 @@ app.use(async ctx => {
 getConnectionOptions().then(options => {
   console.log(options);
 
-  let dbOptions = null;
+  let dbOptions = {};
 
   if (process.env.NODE_ENV === "production") {
     dbOptions = Object.assign(options, { extra: { ssl: "Amazon RDS" } });
