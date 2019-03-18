@@ -1,7 +1,7 @@
 import { BaseContext } from "koa";
 const request = require("request-promise");
 import { SPOTIFY_API_BASE_URL } from "../constants";
-import { getManager } from "typeorm";
+import { createConnection } from "typeorm";
 import { User } from "../entity/user";
 
 class SpotifyController {
@@ -10,17 +10,9 @@ class SpotifyController {
       requestSpotifyApi("me", ctx.state.user.access_token)
     );
 
-    console.log("db");
-    console.log("logs");
-    console.log(process.env);
-    // console.log(getManager());
-    // const userRepository = getManager().getRepository(User);
+    const conn = await createConnection();
 
-    // const users = await userRepository.find();
-
-    // console.log(users);
-
-    // accountData.users = users;
+    console.log("connected to db...");
 
     ctx.body = accountData;
   }
