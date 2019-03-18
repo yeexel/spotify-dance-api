@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: spotify-dance-api-dev
+    environment: null
     group_suffix: null
 deploy:
   artifact: dist/deploy.zip
