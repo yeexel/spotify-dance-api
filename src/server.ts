@@ -7,6 +7,7 @@ import { router } from "./routes";
 import { config } from "./config";
 
 import "reflect-metadata";
+import { getConnectionOptions } from "typeorm"
 
 const app = new Koa();
 
@@ -29,4 +30,7 @@ app.use(async ctx => {
   }
 });
 
-app.listen(config.port);
+getConnectionOptions().then(options => {
+  console.log(options);
+  app.listen(config.port);
+})
