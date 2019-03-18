@@ -11,7 +11,7 @@ import { router } from "./routes";
 import { config } from "./config";
 
 import "reflect-metadata";
-import { getConnectionOptions } from "typeorm";
+import { getConnectionOptions, createConnection } from "typeorm";
 
 const app = new Koa();
 
@@ -34,7 +34,7 @@ app.use(async ctx => {
   }
 });
 
-getConnectionOptions().then(options => {
+getConnectionOptions().then(async options => {
   console.log(options);
 
   let dbOptions = {};
@@ -45,7 +45,7 @@ getConnectionOptions().then(options => {
     dbOptions = Object.assign(options, { extra: { ssl: "Amazon RDS" } });
   }
 
-  console.log(dbOptions);
+  const conn = createConnection();
 
   app.listen(config.port);
 });
