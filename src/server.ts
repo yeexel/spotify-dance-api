@@ -3,11 +3,15 @@ import * as cors from "@koa/cors";
 import * as helmet from "koa-helmet";
 import * as bodyParser from "koa-bodyparser";
 
+import * as dotenv from "dotenv";
+
+dotenv.config({ path: ".env" });
+
 import { router } from "./routes";
 import { config } from "./config";
 
 import "reflect-metadata";
-import { getConnectionOptions } from "typeorm"
+import { getConnectionOptions } from "typeorm";
 
 const app = new Koa();
 
@@ -32,5 +36,14 @@ app.use(async ctx => {
 
 getConnectionOptions().then(options => {
   console.log(options);
+
+  let dbOptions = null;
+
+  if (process.env.NODE_ENV === "production") {
+    dbOptions = Object.assign(options, { extra: { ssl: "Amazon RDS" } });
+  }
+
+  console.log(dbOptions);
+
   app.listen(config.port);
-})
+});
