@@ -1,6 +1,6 @@
 {
   "name": "spotify-dance-api",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "main": "dist/server.js",
   "author": "Oleksii Kulikov <yeexel@gmail.com>",
   "license": "MIT",
@@ -16,7 +16,7 @@
     "tslint": "tslint -c tslint.json -p tsconfig.json --fix",
     "start": "node dist/server.js",
     "build": "yarn run tslint && yarn run build-ts",
-    "heroku-postbuild": "make prod_run_migrations && yarn start"
+    "heroku-postbuild": "yarn build && make prod_run_migrations"
   },
   "dependencies": {
     "@koa/cors": "^2.2.3",
