@@ -12,6 +12,14 @@ class SpotifyController {
 
     ctx.body = user;
   }
+
+  public static async playlists(ctx: BaseContext) {
+    const playlistData = await request(
+      requestSpotifyApi(`users/${ctx.state.user.spotify_id}/playlists`, ctx.state.user.access_token)
+    );
+
+    ctx.body = playlistData;
+  }
 }
 
 const requestSpotifyApi = (endpoint: string, token: string): object => ({
