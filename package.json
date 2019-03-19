@@ -1,21 +1,22 @@
 {
   "name": "spotify-dance-api",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "main": "dist/server.js",
   "author": "Oleksii Kulikov <yeexel@gmail.com>",
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": ">= 10.13.x",
-    "npm": ">= 6.4.x"
+    "node": "10.13.0",
+    "npm": "6.4.1",
+    "yarn": "1.13.0"
   },
   "scripts": {
     "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/server.ts",
     "build-ts": "tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json --fix",
-    "serve": "node dist/server.js",
     "start": "node build/server.js",
-    "build": "yarn run tslint && yarn run build-ts"
+    "build": "yarn run tslint && yarn run build-ts",
+    "heroku-postbuild": "make prod_run_migrations"
   },
   "dependencies": {
     "@koa/cors": "^2.2.3",
