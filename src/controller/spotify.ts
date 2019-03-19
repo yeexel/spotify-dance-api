@@ -1,22 +1,16 @@
 import { BaseContext } from "koa";
 const request = require("request-promise");
 import { SPOTIFY_API_BASE_URL } from "../constants";
-import { getManager } from "typeorm";
-import { User } from "../entity/user";
 
 class SpotifyController {
   public static async account(ctx: BaseContext) {
-    const accountData = await request(
-      requestSpotifyApi("me", ctx.state.user.access_token)
-    );
+    const user = ctx.state.user;
 
-    const userRepository = getManager().getRepository(User);
+    delete user.access_token;
+    delete user.spotify_id;
+    delete user.created_at;
 
-    const users = await userRepository.find();
-
-    accountData.users = users;
-
-    ctx.body = accountData;
+    ctx.body = user;
   }
 }
 

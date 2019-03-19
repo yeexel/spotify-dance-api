@@ -1,4 +1,6 @@
 import * as jsonwebtoken from "jsonwebtoken";
+import { getCustomRepository } from "typeorm";
+import { UserRepository } from "../reposiitory/user";
 
 export default (opts: { secret?: string } = {}) => {
   const secret = opts.secret;
@@ -23,8 +25,10 @@ export default (opts: { secret?: string } = {}) => {
         });
       }
 
-      // If it worked set the ctx.state.user parameter to the decoded token.
-      ctx.state.user = decoded.data;
+      const userRepository = getCustomRepository(UserRepository);
+      const user = await userRepository.findOne(decoded.data.user_id);
+
+      ctx.state.user = user;
     } catch (error) {
       // If it's an expiration error, let's report that specifically.
       if (error.name === "TokenExpiredError") {

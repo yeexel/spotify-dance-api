@@ -4,6 +4,9 @@ const request = require("request-promise");
 import * as querystring from "query-string";
 import * as jsonwebtoken from "jsonwebtoken";
 import { SPOTIFY_ACCOUNTS_BASE_URL } from "../constants";
+import { getCustomRepository } from "typeorm";
+import { UserRepository } from "../reposiitory/user";
+import { requestSpotifyApi } from "./spotify";
 
 const RANDOM_STRING_LENGTH = 10;
 const SPOTIFY_STATE_KEY = "spotskc";
@@ -30,16 +33,26 @@ export default class AuthController {
       // clear cookie
       ctx.cookies.set(SPOTIFY_STATE_KEY, undefined);
 
-      const spotifyAcessTokenData = await request(
+      const spotifyAccessTokenData = await request(
         prepareAuthCodeRequestParams(code)
       );
 
-      if (!spotifyAcessTokenData) {
+      if (!spotifyAccessTokenData) {
         ctx.throw(400, "Spotify error");
       }
 
+      const spotifyUser = await request(
+        requestSpotifyApi("me", spotifyAccessTokenData.access_token)
+      );
+
+      const userRepository = getCustomRepository(UserRepository);
+      const user = await userRepository.getBySpotifyIdOrCreate(spotifyUser.id, {
+        ...spotifyUser,
+        access_token: spotifyAccessTokenData.access_token
+      });
+
       const token = jsonwebtoken.sign(
-        { data: spotifyAcessTokenData },
+        { data: { user_id: user.id } },
         config.jwtSecret,
         { expiresIn: "50m" }
       );

@@ -1,13 +1,36 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 
-@Entity()
+@Entity({
+    name: "users"
+})
 export class User {
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @Column("varchar")
+    spotify_id: string;
 
-    @Column({
-        length: 100
-    })
-    firstname: string;
+    @Column()
+    access_token: string;
+
+    @Column("varchar")
+    name: string;
+
+    @Column("varchar")
+    email: string;
+
+    @Column("varchar")
+    subscription: string;
+
+    @Column({ length: 2 })
+    country: string;
+
+    @Column("int")
+    followers: number;
+
+    @Column("varchar")
+    avatar_url: string;
+
+    @CreateDateColumn()
+    created_at: string;
 }
