@@ -23,6 +23,20 @@ class SpotifyController {
 
     ctx.body = playlistData;
   }
+
+  public static async playlist(ctx: BaseContext) {
+    const playlistId = ctx.query.id || undefined;
+
+    const singlePlaylistData = await request(
+      requestSpotifyApi(`playlists/${playlistId}`, ctx.state.user.access_token)
+    );
+
+    singlePlaylistData.created_by_user = singlePlaylistData.owner.display_name === ctx.state.user.name;
+    // placeholder
+    singlePlaylistData.danceability = 65;
+
+    ctx.body = singlePlaylistData;
+  }
 }
 
 const requestSpotifyApi = (endpoint: string, token: string): object => ({
