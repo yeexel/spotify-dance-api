@@ -37,6 +37,31 @@ class SpotifyController {
 
     ctx.body = singlePlaylistData;
   }
+
+  public static async analyzePlaylist(ctx: BaseContext) {
+    const playlistId = ctx.query.id || undefined;
+
+    const playlistTracksData = await request(
+      requestSpotifyApi(`playlists/${playlistId}/tracks?limit=100`, ctx.state.user.access_token)
+    );
+
+    const totalTracks = playlistTracksData.items.length;
+    const tracksIds = playlistTracksData.items.map(track => track.track.id);
+
+    let danceability = 0;
+
+    if (tracksIds.length) {
+      const audioFeatures: any = await request(
+        requestSpotifyApi(`audio-features?ids=${tracksIds.join(',')}`, ctx.state.user.access_token)
+      );
+
+      const totalDanceability = audioFeatures.audio_features.reduce((acc, af) => acc += af.danceability, 0);
+
+      danceability = totalDanceability / totalTracks;
+    }
+
+    ctx.body = Math.ceil(danceability * 100);
+  }
 }
 
 const requestSpotifyApi = (endpoint: string, token: string): object => ({

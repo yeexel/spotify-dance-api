@@ -21,5 +21,6 @@ router.get("/callback", controller.auth.callback);
 router.get("/api/account", jwtMiddleware, controller.spotify.account);
 router.get("/api/playlists", jwtMiddleware, controller.spotify.playlists);
 router.get("/api/playlist", jwtMiddleware, controller.spotify.playlist);
+router.get("/api/analyze-playlist", jwtMiddleware, controller.spotify.analyzePlaylist);
 
 export { router };
