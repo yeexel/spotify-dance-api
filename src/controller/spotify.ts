@@ -33,7 +33,7 @@ class SpotifyController {
 
     singlePlaylistData.created_by_user = singlePlaylistData.owner.display_name === ctx.state.user.name;
     // placeholder
-    singlePlaylistData.danceability = 65;
+    singlePlaylistData.danceability = -1;
 
     ctx.body = singlePlaylistData;
   }
