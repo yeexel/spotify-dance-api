@@ -1,6 +1,10 @@
 import { BaseContext } from "koa";
 const request = require("request-promise");
+import { config } from "../config";
 import { SPOTIFY_API_BASE_URL } from "../constants";
+import { getCustomRepository } from "typeorm";
+import { PlaylistRepository } from "../reposiitory/playlist";
+import { PlaylistStats } from "../helpers/playlistStats";
 
 class SpotifyController {
   public static async account(ctx: BaseContext) {
@@ -27,40 +31,90 @@ class SpotifyController {
   public static async playlist(ctx: BaseContext) {
     const playlistId = ctx.query.id || undefined;
 
-    const singlePlaylistData = await request(
+    const playlistRepository = getCustomRepository(PlaylistRepository);
+
+    const spotifyPlaylist = await request(
       requestSpotifyApi(`playlists/${playlistId}`, ctx.state.user.access_token)
     );
 
-    singlePlaylistData.created_by_user = singlePlaylistData.owner.display_name === ctx.state.user.name;
-    // placeholder
-    singlePlaylistData.danceability = -1;
+    let playlistDataToReturn: any = {};
 
-    ctx.body = singlePlaylistData;
+    if (spotifyPlaylist) {
+      const stats = new PlaylistStats(spotifyPlaylist.id, ctx.state.user.access_token);
+
+      playlistDataToReturn = await playlistRepository.getBySpotifyId(spotifyPlaylist.id);
+
+      if (!playlistDataToReturn) {
+        const statsParsed: any = await stats.retrieve();
+
+        playlistDataToReturn = await playlistRepository.createPlaylist(spotifyPlaylist.id, ctx.state.user.id, {
+          ...spotifyPlaylist,
+          duration_ms: statsParsed.duration_ms,
+          danceability: statsParsed.danceability
+        });
+      }
+
+      if (spotifyPlaylist.tracks.total !== playlistDataToReturn.tracks) {
+        const statsParsed2: any = await stats.retrieve();
+
+        await playlistRepository.save({
+          ...playlistDataToReturn,
+          duration_ms: statsParsed2.duration_ms,
+          danceability: statsParsed2.danceability,
+          tracks: statsParsed2.tracks
+        });
+
+        playlistDataToReturn = await playlistRepository.getBySpotifyId(spotifyPlaylist.id);
+      }
+
+      if (spotifyPlaylist.followers.total !== playlistDataToReturn.followers) {
+        await playlistRepository.save({
+          ...playlistDataToReturn,
+          followers: spotifyPlaylist.followers.total
+        });
+
+        playlistDataToReturn = await playlistRepository.getBySpotifyId(spotifyPlaylist.id);
+      }
+
+      if (spotifyPlaylist.images[0].url !== playlistDataToReturn.cover_image) {
+        await playlistRepository.save({
+          ...playlistDataToReturn,
+          cover_image: spotifyPlaylist.images[0].url
+        });
+
+        playlistDataToReturn = await playlistRepository.getBySpotifyId(spotifyPlaylist.id);
+      }
+
+      if (spotifyPlaylist.description !== playlistDataToReturn.description) {
+        await playlistRepository.save({
+          ...playlistDataToReturn,
+          description: spotifyPlaylist.description
+        });
+
+        playlistDataToReturn = await playlistRepository.getBySpotifyId(spotifyPlaylist.id);
+      }
+
+      if (spotifyPlaylist.name !== playlistDataToReturn.name) {
+        await playlistRepository.save({
+          ...playlistDataToReturn,
+          name: spotifyPlaylist.name
+        });
+
+        playlistDataToReturn = await playlistRepository.getBySpotifyId(spotifyPlaylist.id);
+      }
+    }
+
+    ctx.body = playlistDataToReturn;
   }
 
   public static async analyzePlaylist(ctx: BaseContext) {
     const playlistId = ctx.query.id || undefined;
 
-    const playlistTracksData = await request(
-      requestSpotifyApi(`playlists/${playlistId}/tracks?limit=100`, ctx.state.user.access_token)
-    );
+    const playlistStats = new PlaylistStats(playlistId, ctx.state.user.access_token);
 
-    const totalTracks = playlistTracksData.items.length;
-    const tracksIds = playlistTracksData.items.map(track => track.track.id);
+    const response = await playlistStats.retrieve();
 
-    let danceability = 0;
-
-    if (tracksIds.length) {
-      const audioFeatures: any = await request(
-        requestSpotifyApi(`audio-features?ids=${tracksIds.join(',')}`, ctx.state.user.access_token)
-      );
-
-      const totalDanceability = audioFeatures.audio_features.reduce((acc, af) => acc += af.danceability, 0);
-
-      danceability = totalDanceability / totalTracks;
-    }
-
-    ctx.body = Math.ceil(danceability * 100);
+    ctx.body = response;
   }
 }
 
