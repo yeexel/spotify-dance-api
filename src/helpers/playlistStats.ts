@@ -10,59 +10,59 @@ class PlaylistStats {
     this.accessToken = accessToken;
   }
 
+  // attrs we can use to define filters for playlist
+  // long play, high tempo, energetic, acoustic/instrumental, dance, happy, sad, work
   async retrieve() {
     const playlistTracksData = await request(
       requestSpotifyApi(`playlists/${this.playlistId}/tracks?limit=100`, this.accessToken)
     );
 
-    const totalTracks = playlistTracksData.items.length;
+    const totalTracks = playlistTracksData.total;
     const tracksIds = playlistTracksData.items.map(track => track.track.id);
 
     let danceability = 0;
     let duration = 0;
+    let tempo = 0;
+    let valence = 0;
+    let energy = 0;
+    let instrumentalness = 0;
+    let acousticness = 0;
 
     if (tracksIds.length) {
       const audioFeatures: any = await request(
         requestSpotifyApi(`audio-features?ids=${tracksIds.join(',')}`, this.accessToken)
       );
 
-      if (tracksIds.length <= 99) {
+      if (totalTracks <= 100) {
         const totalDanceability = audioFeatures.audio_features.reduce((acc, af) => acc += af.danceability, 0);
-        danceability = totalDanceability / totalTracks;
+        const totalTempo = audioFeatures.audio_features.reduce((acc, af) => acc += af.tempo, 0);
+        const totalValence = audioFeatures.audio_features.reduce((acc, af) => acc += af.valence, 0);
+        const totalEnergy = audioFeatures.audio_features.reduce((acc, af) => acc += af.energy, 0);
+        const totalInstrumentalness = audioFeatures.audio_features.reduce((acc, af) => acc += af.instrumentalness, 0);
+        const totalAcousticness = audioFeatures.audio_features.reduce((acc, af) => acc += af.acousticness, 0);
+
+        danceability = totalDanceability / +tracksIds.length;
+        tempo = totalTempo / +tracksIds.length;
+        valence = totalValence / +tracksIds.length;
+        energy = totalEnergy / +tracksIds.length;
+        instrumentalness = totalInstrumentalness / tracksIds.length;
+        acousticness = totalAcousticness / tracksIds.length;
         duration = audioFeatures.audio_features.reduce((acc, af) => acc += af.duration_ms, 0);
       }
     }
 
     return {
-      danceability: tracksIds.length > 99 ? -1 : Math.ceil(danceability * 100),
-      duration_ms: tracksIds.length > 99 ? -1 : duration,
-      // duration: parseTime(duration),
+      danceability: totalTracks > 100 ? -1 : Math.ceil(danceability * 100),
+      tempo_avg: totalTracks > 100 ? -1 : Math.ceil(tempo),
+      valence: totalTracks > 100 ? -1 : Math.ceil(valence * 100),
+      energy: totalTracks > 100 ? -1 : Math.ceil(energy * 100),
+      instrumentalness: totalTracks > 100 ? -1 : Math.ceil(instrumentalness * 100),
+      acousticness: totalTracks > 100 ? -1 : Math.ceil(acousticness * 100),
+      duration_ms: totalTracks > 100 ? -1 : duration,
       tracks: totalTracks
     };
   }
 }
-
-function parseTime(millisec: number): object {
-  // @ts-ignore
-  const normalizeTime = (time: string): string => (time.length === 1) ? time.padStart(2, '0') : time;
-
-  let seconds: string = (millisec / 1000).toFixed(0);
-  let minutes: string = Math.floor(parseInt(seconds) / 60).toString();
-  let hours: string = '';
-
-  if (parseInt(minutes) > 59) {
-    hours = normalizeTime(Math.floor(parseInt(minutes) / 60).toString());
-    minutes = normalizeTime((parseInt(minutes) - (parseInt(hours) * 60)).toString());
-  }
-  seconds = normalizeTime(Math.floor(parseInt(seconds) % 60).toString());
-
-  return {
-    hours: +hours,
-    minutes: +minutes,
-    seconds: +seconds,
-    ms: millisec
-  }
- }
 
 const requestSpotifyApi = (endpoint: string, token: string): object => ({
   method: "GET",

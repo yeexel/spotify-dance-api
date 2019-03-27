@@ -44,6 +44,15 @@ export class Playlist {
   @Column("smallint")
   danceability: number;
 
+  @Column("smallint", { nullable: true })
+  energy: number;
+
+  @Column("smallint", { nullable: true })
+  valence: number;
+
+  @Column("smallint", { nullable: true })
+  tempo: number;
+
   @CreateDateColumn()
   created_at: string;
 

@@ -21,6 +21,9 @@ export class PlaylistRepository extends Repository<Playlist> {
     playlist.owner = data.owner.display_name;
     playlist.duration_ms = data.duration_ms;
     playlist.danceability = data.danceability;
+    playlist.energy = data.energy;
+    playlist.valence = data.valence;
+    playlist.tempo = data.tempo;
 
     await this.save(playlist);
 

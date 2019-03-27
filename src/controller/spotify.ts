@@ -50,7 +50,10 @@ class SpotifyController {
         playlistDataToReturn = await playlistRepository.createPlaylist(spotifyPlaylist.id, ctx.state.user.id, {
           ...spotifyPlaylist,
           duration_ms: statsParsed.duration_ms,
-          danceability: statsParsed.danceability
+          danceability: statsParsed.danceability,
+          energy: statsParsed.energy,
+          valence: statsParsed.valence,
+          tempo: statsParsed.tempo_avg
         });
       }
 
@@ -61,7 +64,10 @@ class SpotifyController {
           ...playlistDataToReturn,
           duration_ms: statsParsed2.duration_ms,
           danceability: statsParsed2.danceability,
-          tracks: statsParsed2.tracks
+          tracks: statsParsed2.tracks,
+          energy: statsParsed2.energy,
+          valence: statsParsed2.valence,
+          tempo: statsParsed2.tempo_avg
         });
 
         playlistDataToReturn = await playlistRepository.getBySpotifyId(spotifyPlaylist.id);
