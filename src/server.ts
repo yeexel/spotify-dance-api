@@ -38,7 +38,11 @@ createConnection({
   migrations:
     config.nodeEnv === "dev"
       ? ["src/migrations/**/*.ts"]
-      : ["dist/migrations/**/*.js"]
+      : ["dist/migrations/**/*.js"],
+  cli: {
+    migrationsDir:
+      config.nodeEnv === "dev" ? "src/migrations" : "dist/migrations"
+  }
 }).then(() => {
   app.listen(config.port);
 });
