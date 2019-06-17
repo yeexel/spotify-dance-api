@@ -14,8 +14,8 @@
     "build-ts": "tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json --fix",
     "start": "node dist/server.js",
-    "build": "yarn run tslint && yarn run build-ts",
-    "heroku-postbuild": "yarn build && make prod_run_migrations"
+    "build": "npm run tslint && npm run build-ts",
+    "heroku-postbuild": "npm run build && make prod_run_migrations"
   },
   "dependencies": {
     "@koa/cors": "^2.2.3",
