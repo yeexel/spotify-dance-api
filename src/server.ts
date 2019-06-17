@@ -30,6 +30,15 @@ app.use(async ctx => {
   }
 });
 
-createConnection().then(() => {
+createConnection({
+  type: "postgres",
+  url: config.databaseUrl,
+  entities:
+    config.nodeEnv === "dev" ? ["src/entity/**/*.ts"] : ["dist/entity/**/*.js"],
+  migrations:
+    config.nodeEnv === "dev"
+      ? ["src/migrations/**/*.ts"]
+      : ["dist/migrations/**/*.js"]
+}).then(() => {
   app.listen(config.port);
 });

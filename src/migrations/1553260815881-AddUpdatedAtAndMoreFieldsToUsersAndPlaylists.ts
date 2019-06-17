@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class AddUpdatedAtAndMoreFieldsToUsersAndPlaylists1553260815881 implements MigrationInterface {
 

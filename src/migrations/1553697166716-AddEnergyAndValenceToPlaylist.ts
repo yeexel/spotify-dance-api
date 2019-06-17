@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class AddEnergyAndValenceToPlaylist1553697166716 implements MigrationInterface {
 
