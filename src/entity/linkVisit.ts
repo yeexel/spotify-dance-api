@@ -12,6 +12,7 @@ import { Link } from "./link";
 @Entity({
   name: "link_visits"
 })
+@Index(["ip_address", "ua_hash"], { unique: true })
 export class LinkVisit {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -23,7 +24,6 @@ export class LinkVisit {
   ua: string;
 
   @Column("varchar")
-  @Index({ unique: true })
   ua_hash: string;
 
   @CreateDateColumn()
