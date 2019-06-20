@@ -4,6 +4,9 @@ dev_generate_migrations:
 dev_run_migrations:
 	source .env && TYPEORM_URL=$$DATABASE_URL ./node_modules/ts-node/dist/bin.js ./node_modules/typeorm/cli.js migration:run
 
+dev_run_migrations_revert:
+	source .env && TYPEORM_URL=$$DATABASE_URL ./node_modules/ts-node/dist/bin.js ./node_modules/typeorm/cli.js migration:revert
+
 prod_run_migrations:
 	TYPEORM_MIGRATIONS=dist/migrations/**/*.js TYPEORM_MIGRATIONS_DIR=dist/migrations TYPEORM_DRIVER_EXTRA='{ "ssl": true }' TYPEORM_URL=$$DATABASE_URL node ./node_modules/typeorm/cli.js migration:run
 
