@@ -210,6 +210,7 @@ class SpotifyController {
 
     linkVisit.ip_address = ip;
     linkVisit.ua = ua;
+    linkVisit.playlist_id = playlist.id;
     linkVisit.ua_hash = uaHash;
     linkVisit.link = link;
 

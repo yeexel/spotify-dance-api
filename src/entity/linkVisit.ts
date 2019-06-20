@@ -12,10 +12,13 @@ import { Link } from "./link";
 @Entity({
   name: "link_visits"
 })
-@Index(["ip_address", "ua_hash", "id"], { unique: true })
+@Index(["ip_address", "ua_hash", "playlist_id"], { unique: true })
 export class LinkVisit {
   @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @Column("uuid", { nullable: true })
+  playlist_id: string;
 
   @Column("varchar")
   ip_address: string;
