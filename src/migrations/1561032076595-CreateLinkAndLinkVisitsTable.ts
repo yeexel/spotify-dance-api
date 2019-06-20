@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class CreateLinkAndLinkVisitsTable1561032076595 implements MigrationInterface {
 
