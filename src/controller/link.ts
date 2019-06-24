@@ -21,13 +21,14 @@ export default class LinkController {
       link = await linkRepository.save(link);
     } catch (e) {
       if (e instanceof QueryFailedError) {
-        ctx.status = 422;
-        ctx.res.end(
-          JSON.stringify({
-            error: true,
-            msg: "Link already exists for given playlist."
-          })
-        );
+        // ctx.status = 422;
+        // ctx.res.end(
+        //   JSON.stringify({
+        //     error: true,
+        //     msg: "Link already exists for given playlist."
+        //   })
+        // );
+        link = await linkRepository.findOne({ playlist_id: requestBody.id });
       }
     }
 
