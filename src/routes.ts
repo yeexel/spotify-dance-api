@@ -9,7 +9,7 @@ const jwtMiddleware = jwt({ secret: config.jwtSecret });
 
 router.get("/", ctx => {
   ctx.body = {
-    api: "spotify-dance-api",
+    api: "playlista-api",
     version,
     ts: Date.now()
   };
