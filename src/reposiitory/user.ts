@@ -11,6 +11,7 @@ export class UserRepository extends Repository<User> {
     let user = await this.getBySpotifyId(id);
 
     if (!user) {
+      console.log(user);
       user = this.create();
       user.spotify_id = data.id;
       user.access_token = data.access_token;
@@ -22,7 +23,7 @@ export class UserRepository extends Repository<User> {
       user.avatar_url = data.images.length
         ? data.images[0] && data.images[0].url
           ? data.images[0].url
-          : ""
+          : "no-avatar"
         : undefined;
 
       await this.save(user);
