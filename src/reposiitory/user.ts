@@ -19,12 +19,17 @@ export class UserRepository extends Repository<User> {
       user.subscription = data.product;
       user.country = data.country;
       user.followers = data.followers.total;
-      user.avatar_url = data.images.length ? data.images[0].url : undefined;
+      user.avatar_url = data.images.length
+        ? data.images[0] && data.images[0].url
+          ? data.images[0].url
+          : ""
+        : undefined;
 
       await this.save(user);
 
       user = await this.getBySpotifyId(id);
-    } else { // update access token for existing user on login
+    } else {
+      // update access token for existing user on login
       user.access_token = data.access_token;
 
       await this.save(user);
