@@ -16,6 +16,8 @@ class SpotifyController {
     delete user.access_token;
     delete user.spotify_id;
     delete user.created_at;
+    delete user.email;
+    delete user.subscription;
 
     ctx.body = user;
   }
