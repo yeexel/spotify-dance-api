@@ -24,7 +24,7 @@ export class UserRepository extends Repository<User> {
         ? data.images[0] && data.images[0].url
           ? data.images[0].url
           : "no-avatar"
-        : undefined;
+        : "no-avatar";
 
       await this.save(user);
 
