@@ -60,7 +60,6 @@ class DiscoverHelper {
     const topTracks = await this.getTopByType(TYPE_TRACK);
 
     let {
-      avg_tempo: tempo,
       avg_energy: energy,
       avg_valence: valence,
       avg_danceability: danceability
@@ -83,7 +82,7 @@ class DiscoverHelper {
           danceability.min
         }&max_danceability=${danceability.max}&min_energy=${
           energy.min
-        }&max_energy=${energy.max}&target_tempo=${tempo}`,
+        }&max_energy=${energy.max}&target_tempo=${avgData.avg_tempo}`,
         this.token
       )
     );
