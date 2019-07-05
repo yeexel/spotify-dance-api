@@ -24,6 +24,13 @@ router.get("/api/account", jwtMiddleware, controller.spotify.account);
 
 router.get("/api/playlists", jwtMiddleware, controller.spotify.playlists);
 router.get("/api/playlist", jwtMiddleware, controller.spotify.playlist);
+router.put(
+  "/api/playlists/:id",
+  jwtMiddleware,
+  controller.spotify.toggleDiscover
+);
+router.post(`/api/playlists`, jwtMiddleware, controller.spotify.createPlaylist);
+router.get("/api/discover", jwtMiddleware, controller.spotify.discover);
 router.get(
   "/api/analyze-playlist",
   jwtMiddleware,

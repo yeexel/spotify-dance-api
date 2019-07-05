@@ -1,13 +1,20 @@
 import { BaseContext } from "koa";
 const request = require("request-promise");
 import { SPOTIFY_API_BASE_URL } from "../constants";
-import { getCustomRepository, QueryFailedError } from "typeorm";
+import {
+  getCustomRepository,
+  QueryFailedError,
+  createQueryBuilder
+} from "typeorm";
 import { PlaylistRepository } from "../reposiitory/playlist";
+import { RecommendationRepository } from "../reposiitory/recommendation";
 import { PlaylistStats } from "../helpers/playlistStats";
+import { DiscoverHelper } from "../helpers/discover";
 import { LinkRepository } from "../reposiitory/link";
 import { LinkVisit } from "../entity/linkVisit";
 import * as crypto from "crypto";
 import { LinkVisitRepository } from "../reposiitory/linkVisit";
+import { Recommendation } from "../entity/recommendation";
 
 class SpotifyController {
   public static async account(ctx: BaseContext) {
@@ -155,6 +162,113 @@ class SpotifyController {
     ctx.body = response;
   }
 
+  public static async createPlaylist(ctx: BaseContext) {
+    const trackIds = ctx.request.body.trackIds;
+
+    const newPlaylist = await request(
+      requestPostSpotifyApi(
+        `users/${ctx.state.user.spotify_id}/playlists`,
+        ctx.state.user.access_token,
+        {
+          name: "Playlista.co"
+        }
+      )
+    );
+
+    await request(
+      requestPostSpotifyApi(
+        `playlists/${newPlaylist.id}/tracks`,
+        ctx.state.user.access_token,
+        {
+          uris: trackIds.map((id: string) => `spotify:track:${id}`)
+        }
+      )
+    );
+
+    ctx.body = newPlaylist;
+  }
+
+  public static async discover(ctx: BaseContext) {
+    const playlistRepository = getCustomRepository(PlaylistRepository);
+    const recommendationRepository = getCustomRepository(
+      RecommendationRepository
+    );
+
+    const discoverHelper = new DiscoverHelper(
+      ctx.state.user.id,
+      ctx.state.user.access_token
+    );
+
+    const playlistsCount = await playlistRepository.findAndCount({
+      where: { user_id: ctx.state.user.id, discover_include: true }
+    });
+
+    if (playlistsCount[1] < 1) {
+      ctx.status = 422;
+      ctx.res.end(
+        JSON.stringify({
+          error: true,
+          msg: "You should have at least one playlist marked as favorite."
+        })
+      );
+    }
+
+    let recommendations: any = await recommendationRepository.getCurrentDayData(
+      ctx.state.user.id
+    );
+
+    const hasRecommendationsForToday = recommendations.length > 0;
+
+    if (!hasRecommendationsForToday) {
+      const avgData = await playlistRepository.getAvgStats(ctx.state.user.id);
+      const data = await discoverHelper.generate(avgData);
+
+      try {
+        const insertResponse = await createQueryBuilder()
+          .insert()
+          .into(Recommendation)
+          .values(data)
+          .returning("*")
+          .execute();
+
+        recommendations = insertResponse.generatedMaps;
+      } catch (e) {}
+    } else {
+    }
+
+    ctx.body = {
+      playlists: playlistsCount[0],
+      recommendations: recommendations.map(r => ({
+        id: r.id,
+        spotify_id: r.spotify_id,
+        track_name: r.track_name,
+        track_duration: r.track_duration,
+        preview_url: r.preview_url,
+        artist: r.artists.map(rArtist => rArtist.name).join(", ")
+      }))
+    };
+  }
+
+  public static async toggleDiscover(ctx: BaseContext) {
+    const playlistRepository = getCustomRepository(PlaylistRepository);
+
+    const { id } = ctx.params;
+
+    const playlist = await playlistRepository.findOne({
+      where: { spotify_id: id }
+    });
+
+    if (playlist) {
+      playlistRepository.save(
+        playlistRepository.merge(playlist, {
+          discover_include: !playlist.discover_include
+        })
+      );
+    }
+
+    ctx.body = {};
+  }
+
   public static async getPlaylistFromLink(ctx: BaseContext) {
     const playlistRepository = getCustomRepository(PlaylistRepository);
     const linkRepository = getCustomRepository(LinkRepository);
@@ -217,7 +331,6 @@ class SpotifyController {
     linkVisit.link = link;
 
     try {
-      console.log("Saving visit...");
       linkVisitRepository.save(linkVisit);
     } catch (e) {}
 
@@ -231,6 +344,20 @@ const requestSpotifyApi = (endpoint: string, token: string): object => ({
   headers: {
     Authorization: `Bearer ${token}`
   },
+  json: true
+});
+
+const requestPostSpotifyApi = (
+  endpoint: string,
+  token: string,
+  body: any
+): object => ({
+  method: "POST",
+  uri: `${SPOTIFY_API_BASE_URL}/${endpoint}`,
+  headers: {
+    Authorization: `Bearer ${token}`
+  },
+  body,
   json: true
 });
 

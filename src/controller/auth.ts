@@ -11,7 +11,7 @@ import { requestSpotifyApi } from "./spotify";
 const RANDOM_STRING_LENGTH = 10;
 const SPOTIFY_STATE_KEY = "spotskc";
 const SPOTIFY_PERMISSIONS_SCOPE =
-  "user-read-private user-read-email playlist-read-private playlist-read-collaborative";
+  "user-read-private user-read-email playlist-read-private playlist-read-collaborative user-top-read playlist-modify-public";
 
 export default class AuthController {
   public static async login(ctx: BaseContext) {

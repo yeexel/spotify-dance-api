@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn
+} from "typeorm";
 
 @Entity({
   name: "playlists"
@@ -52,6 +58,9 @@ export class Playlist {
 
   @Column("smallint", { nullable: true })
   tempo: number;
+
+  @Column("boolean", { default: false })
+  discover_include: boolean;
 
   @CreateDateColumn()
   created_at: string;

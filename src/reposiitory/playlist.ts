@@ -1,5 +1,5 @@
 import { Playlist } from "../entity/playlist";
-import { Repository, EntityRepository } from "typeorm";
+import { Repository, EntityRepository, createQueryBuilder } from "typeorm";
 
 @EntityRepository(Playlist)
 export class PlaylistRepository extends Repository<Playlist> {
@@ -30,5 +30,19 @@ export class PlaylistRepository extends Repository<Playlist> {
     playlist = await this.getBySpotifyId(spotifyId);
 
     return playlist;
+  }
+
+  async getAvgStats(userId: string) {
+    return createQueryBuilder()
+      .select([
+        "FLOOR(AVG(playlists.tempo)) AS avg_tempo",
+        "FLOOR(AVG(playlists.danceability)) AS avg_danceability",
+        "FLOOR(AVG(playlists.energy)) AS avg_energy",
+        "FLOOR(AVG(playlists.valence)) AS avg_valence"
+      ])
+      .from(Playlist, "playlists")
+      .where("playlists.user_id = :userId", { userId })
+      .andWhere("playlists.discover_include = true")
+      .getRawOne();
   }
 }
