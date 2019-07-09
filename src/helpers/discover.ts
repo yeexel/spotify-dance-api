@@ -57,7 +57,7 @@ class DiscoverHelper {
 
   async generate(avgData: any, limit = 30) {
     const topArtists = await this.getTopByType(TYPE_ARTIST);
-    const topTracks = await this.getTopByType(TYPE_TRACK);
+    const topTracks = await this.getTopByType(TYPE_TRACK, TIME_RANGE_SHORT);
 
     let {
       avg_energy: energy,
