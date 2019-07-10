@@ -261,7 +261,7 @@ class SpotifyController {
     const { id } = ctx.params;
 
     const playlist = await playlistRepository.findOne({
-      where: { spotify_id: id }
+      where: { spotify_id: id, user_id: ctx.state.user.id }
     });
 
     if (playlist) {
