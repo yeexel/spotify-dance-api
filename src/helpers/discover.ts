@@ -15,17 +15,17 @@ const TIME_RANGE_SHORT = "short_term";
 const TIME_RANGE_MEDIUM = "medium_term";
 const TIME_RANGE_LONG = "long_term";
 
-const LIMIT_TOP = 2;
+const LIMIT_TOP = 15;
 const TYPE_TRACK = "tracks";
 const TYPE_ARTIST = "artists";
 
 const ENERGY_MAX_STEP = 7;
-const ENERGY_MIN_STEP = 4;
+const ENERGY_MIN_STEP = 3;
 
 const VALENCE_MAX_STEP = 10;
 const VALENCE_MIN_STEP = 5;
 
-const DANCEABILITY_MAX_STEP = 9;
+const DANCEABILITY_MAX_STEP = 7;
 const DANCEABILITY_MIN_STEP = 4;
 
 const TEMPO_MAX_STEP = 0;
@@ -76,13 +76,15 @@ class DiscoverHelper {
 
     const recommendations: any = await request(
       requestSpotifyApi(
-        `recommendations?limit=${limit}&seed_artists=${topArtists.join(
+        `recommendations?limit=${limit}&seed_artists=${pickRandom(
+          topArtists
+        ).join(",")}&seed_tracks=${pickRandom(topTracks).join(
           ","
-        )}&seed_tracks=${topTracks.join(",")}&min_danceability=${
-          danceability.min
-        }&max_danceability=${danceability.max}&min_energy=${
-          energy.min
-        }&max_energy=${energy.max}&target_tempo=${avgData.avg_tempo}`,
+        )}&min_danceability=${danceability.min}&max_danceability=${
+          danceability.max
+        }&min_energy=${energy.min}&max_energy=${energy.max}&target_tempo=${
+          avgData.avg_tempo
+        }`,
         this.token
       )
     );
@@ -129,5 +131,8 @@ const requestSpotifyApi = (endpoint: string, token: string): object => ({
   },
   json: true
 });
+
+const pickRandom = (inArray: Array<string>, take: number = 2) =>
+  inArray.sort(() => 0.5 - Math.random()).slice(0, take);
 
 export { DiscoverHelper };
