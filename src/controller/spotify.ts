@@ -63,7 +63,8 @@ class SpotifyController {
       );
 
       playlistDataToReturn = await playlistRepository.getBySpotifyId(
-        spotifyPlaylist.id
+        spotifyPlaylist.id,
+        ctx.state.user.id
       );
 
       if (!playlistDataToReturn) {
@@ -97,7 +98,8 @@ class SpotifyController {
         });
 
         playlistDataToReturn = await playlistRepository.getBySpotifyId(
-          spotifyPlaylist.id
+          spotifyPlaylist.id,
+          ctx.state.user.id
         );
       }
 
@@ -108,7 +110,8 @@ class SpotifyController {
         });
 
         playlistDataToReturn = await playlistRepository.getBySpotifyId(
-          spotifyPlaylist.id
+          spotifyPlaylist.id,
+          ctx.state.user.id
         );
       }
 
@@ -119,7 +122,8 @@ class SpotifyController {
         });
 
         playlistDataToReturn = await playlistRepository.getBySpotifyId(
-          spotifyPlaylist.id
+          spotifyPlaylist.id,
+          ctx.state.user.id
         );
       }
 
@@ -130,7 +134,8 @@ class SpotifyController {
         });
 
         playlistDataToReturn = await playlistRepository.getBySpotifyId(
-          spotifyPlaylist.id
+          spotifyPlaylist.id,
+          ctx.state.user.id
         );
       }
 
@@ -141,7 +146,8 @@ class SpotifyController {
         });
 
         playlistDataToReturn = await playlistRepository.getBySpotifyId(
-          spotifyPlaylist.id
+          spotifyPlaylist.id,
+          ctx.state.user.id
         );
       }
     }

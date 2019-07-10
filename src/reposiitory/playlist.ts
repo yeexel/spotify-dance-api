@@ -3,8 +3,10 @@ import { Repository, EntityRepository, createQueryBuilder } from "typeorm";
 
 @EntityRepository(Playlist)
 export class PlaylistRepository extends Repository<Playlist> {
-  getBySpotifyId(id: string) {
-    return this.findOne({ where: { spotify_id: id, active: true } });
+  getBySpotifyId(id: string, userId: string) {
+    return this.findOne({
+      where: { spotify_id: id, active: true, user_id: userId }
+    });
   }
 
   async createPlaylist(spotifyId: string, userId: string, data: any) {
@@ -27,7 +29,7 @@ export class PlaylistRepository extends Repository<Playlist> {
 
     await this.save(playlist);
 
-    playlist = await this.getBySpotifyId(spotifyId);
+    playlist = await this.getBySpotifyId(spotifyId, userId);
 
     return playlist;
   }

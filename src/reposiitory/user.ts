@@ -11,7 +11,6 @@ export class UserRepository extends Repository<User> {
     let user = await this.getBySpotifyId(id);
 
     if (!user) {
-      console.log(user);
       user = this.create();
       user.spotify_id = data.id;
       user.access_token = data.access_token;
